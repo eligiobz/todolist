@@ -5,6 +5,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const dotenv = require("dotenv");
+
+//dotenv
+dotenv.config();
 
 /// App
 const app = express();
@@ -15,7 +19,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 /// Database
-mongoose.connect("mongodb+srv://admin-eligio:l0k1n3t0@cluster0.0c3lz.mongodb.net/todoListDB?retryWrites=true&w=majority", {
+const user = process.env.MONGO_USR;
+const passwd = process.env.MONGO_PWD;
+const db = process.env.MONGO_DB;
+console.log(process.env);
+mongoose.connect("mongodb+srv://"+user+":"+passwd+"@"+db+"?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: true,
@@ -147,6 +155,7 @@ app.get("/about", (req, res) => {
 });
 
 /// Run the app
-app.listen( process.env.PORT || 3000, () => {
+app.listen( process.env.PORT || 3001, () => {
+  console.log("data is " + process.env.PORT);
   console.log("server started");
 });
