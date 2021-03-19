@@ -22,7 +22,6 @@ app.use(express.static("public"));
 const user = process.env.MONGO_USR;
 const passwd = process.env.MONGO_PWD;
 const db = process.env.MONGO_DB;
-console.log(process.env);
 mongoose.connect("mongodb+srv://"+user+":"+passwd+"@"+db+"?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -56,6 +55,12 @@ const listSchema = {
 
 const List = mongoose.model("List", listSchema);
 
+function copyrightString() {
+  const year = new Date().getFullYear();
+  const dateStr = (year > 2021)?" 2021 - "+year : year;
+  return "Copyright © " + dateStr + " Eligio Becerra";
+}
+
 //Item.insertMany(items);
 
 /// Index GET
@@ -70,7 +75,7 @@ app.get("/", (req, res) => {
         }
       });
     } else {
-      res.render("list", { listTitle: "Today", items: results });
+      res.render("list", { listTitle: "Today", items: results, copyString:copyrightString() });
     }
   });
 });
@@ -144,6 +149,7 @@ app.get("/:listName", (req, res) => {
       res.render("list", {
         listTitle: results.name,
         items: results.items,
+        copyString: copyrightString()
       });
     }
   });
@@ -151,7 +157,8 @@ app.get("/:listName", (req, res) => {
 
 /// About get
 app.get("/about", (req, res) => {
-  res.render("about");
+  
+  res.render("about", {copyString: copyrightString()});  
 });
 
 /// Run the app
